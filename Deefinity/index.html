@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Weather forecast to your e-mail</title>
+        <link rel="stylesheet" href="style.css" type="text/css" />
+        <script defer src="javascript/forecastAPI.js"></script>
+        <script defer src="javascript/app.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="title-text">WEATHER TO YOUR E-MAIL</h1>
+            <form name="change-location" class="change-location">
+                <div class="1st-location">
+                    <label for="city">enter a city</label>
+                    <input name="city" type="text" id="city" />
+                </div>
+                <button id="add-location">add 2nd location</button>
+                <!-- 2nd location hidden input field -->
+                <div id="2nd-location" class="hidden">
+                    <label for="city">enter another city</label>
+                    <input name="city2" type="text" id="city" /><br />
+                </div>
+                <button
+                    type="submit"
+                    value="get weather!"
+                    id="get-weather"
+                    onclick="submitForms()"
+                >
+                    get weather
+                </button>
+                <!-- <button type="submit" id="get-weather">get weather!</button> -->
+            </form>
+            <div id="data-container" class="off">
+                <div id="day-night">
+                    <img
+                        src="https://via.placeholder.com/400x300"
+                        id="time-card"
+                        alt="image representing the time of day"
+                    />
+                </div>
+                <div id="weather-icon-container">
+                    <!-- api icon provided icon  -->
+                    <img
+                        src="https://via.placeholder.com/400x300"
+                        id="weather-icon"
+                        alt="weather icon"
+                    />
+                </div>
+                <div id="current-weather-details">
+                    <h5 class="city-name">City name</h5>
+                    <div class="weather-condition">
+                        Current weather condition
+                    </div>
+                    <div class="temperature">
+                        <span>celsius</span>
+                        <span>&deg;C</span> / <span>fahrenheit</span>
+                        <span>&deg;F</span>
+                    </div>
+                </div>
+                <div id="two-weeks-forecast">
+                    <!-- 14 day forecast to be rendered here -->
+                </div>
+                <!-- 2nd location -->
+                <div id="current-weather-details">
+                    <h5 class="city-name">City name</h5>
+                    <div class="weather-condition">
+                        Current weather condition
+                    </div>
+                    <div class="temperature">
+                        <span>celsius</span>
+                        <span>&deg;C</span> / <span>fahrenheit</span>
+                        <span>&deg;F</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

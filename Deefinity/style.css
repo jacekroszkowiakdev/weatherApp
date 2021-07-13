@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: rgb(226, 226, 241);
+    letter-spacing: normal;
+    font-size: 0.8em;
+}
+
+.container {
+    max-width: 460px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.day-night,
+.weather-details {
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1), 0 0 0 2px rgb(255, 255, 255),
+        0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
+}
+
+.hidden,
+.off {
+    visibility: hidden;
+}
+
+#weather-icon {
+    border: 5px solid black;
+    border-radius: 50px;
+}
