@@ -16,13 +16,13 @@ addLocationButton.addEventListener("click", (evt) => {
     }
 });
 
-const updateCard = async (data, city) => {
+const updateCard = (data, city) => {
     console.log("data and city in updateCard fn: ", data, city);
     // let locationTime = data.time_zone[0].localtime;
     // let timeFormatAdjusted = locationTime.slice(11);
 
     // change image source in accordance to time of the day:
-    if ((data.current_condition[0].isdaytime = "yes")) {
+    if (data.current_condition[0].isdaytime == "yes") {
         dayTime.setAttribute("src", "icons/day.png");
     } else dayTime.setAttribute("src", "icons/night.png");
 
@@ -66,22 +66,25 @@ const updateCard = async (data, city) => {
     twoWeeksForecast.innerHTML = aggregatedTwoWeeksData;
 };
 
-const submitForms = () => {
+const submitForms = async () => {
     const cities = Array.from(citiesForm.getElementsByTagName("input"));
     // get city value and trim any whitespace:
     // const city = citiesForm[0].value.trim();
     // const trimmedInput = city.value.trim();
 
-    const results = cities.map(async ({ value }) => {
-        try {
-            getWeather(value).then((data) => {
-                await updateCard(data, value);
-            });
-        } catch (err) {
-            console.log(err);
-        }
-    });
+    const requests = cities.map(({ value }) => getWeather(value));
+    try {
+        const results = await Promise.all(requests);
+        console.log("result: ", results);
+        // .then((data) => {
+        //     updateCard(data, value);
+        // });
+        // await
+    } catch (err) {
+        console.log(err);
+    }
 
+    // set input fields to null
     cities.forEach((city) => (city.value = null));
 
     // remove "off" class to make the data visible:
@@ -89,3 +92,14 @@ const submitForms = () => {
         dataContainer.classList.remove("off");
     }
 };
+
+// const results = cities.map(async ({ value }) => {
+//     try {
+//         getWeather(value).then((data) => {
+//             console.log("try block data and value: ", data, value),
+//                 updateCard(data, value);
+//         });
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
