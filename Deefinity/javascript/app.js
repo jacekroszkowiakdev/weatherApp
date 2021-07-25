@@ -1,5 +1,4 @@
 const citiesForm = document.getElementsByClassName("change-location")[0];
-
 const optionalCity = document.getElementById("2nd-location");
 const getWeatherButton = document.getElementById("get-weather");
 const addLocationButton = document.getElementById("add-location");
@@ -9,29 +8,28 @@ const twoWeeksForecast = document.getElementById("two-weeks-forecast");
 const dayTime = document.getElementById("time-card");
 const icon = document.getElementById("weather-icon");
 
-const submitForms = async () => {
-    const cities = Array.from(citiesForm.getElementsByTagName("input"));
-    const results = await cities.map(async (city, i) => {
-        getWeather(city.value);
-    });
-    console.log(results);
-    // citiesForm.submit();
-};
+// 2nd location optional button:
+addLocationButton.addEventListener("click", (evt) => {
+    evt.preventDefault();
+    if (optionalCity.classList.contains("hidden")) {
+        optionalCity.classList.remove("hidden");
+    }
+});
 
-document.addEventListener("submit", (evt) => {});
-
-const updateCard = (data, city) => {
-    let locationTime = data.time_zone[0].localtime;
-    let timeFormatAdjusted = locationTime.slice(11);
+const updateCard = async (data, city) => {
+    console.log("data and city in updateCard fn: ", data, city);
+    // let locationTime = data.time_zone[0].localtime;
+    // let timeFormatAdjusted = locationTime.slice(11);
 
     // change image source in accordance to time of the day:
     if ((data.current_condition[0].isdaytime = "yes")) {
         dayTime.setAttribute("src", "icons/day.png");
     } else dayTime.setAttribute("src", "icons/night.png");
 
-    // update the weather card with current weather condition and local time:
+    // update the weather card with current weather condition :
+    // make a async function that populates the data with 1 currentHTML, 2 weather icon and 3 two weeks array
     current.innerHTML = `
-    <h5 class="city-name">${city} local time is ${timeFormatAdjusted}</h5>
+    <h5 class="city-name">${city}</h5>
                     <div class="weather-condition">
                         <span>${data.current_condition[0].weatherDesc[0].value}</span><br>
                         <span>CLOUD COVER: ${data.current_condition[0].cloudcover}%</span>
@@ -41,7 +39,8 @@ const updateCard = (data, city) => {
                         <span>${data.current_condition[0].temp_C}</span>
                         <span>&deg;C</span> / <span>${data.current_condition[0].temp_F}</span>
                         <span>&deg;F</span>
-                    </div>`;
+                    </div>
+                    `;
 
     // update the icon with api provided image
     icon.setAttribute(
@@ -50,12 +49,10 @@ const updateCard = (data, city) => {
     );
 
     //render the 14 days array into the html:
-    const twoWeeksForecastData = data.weather;
-    let aggregatedTwoWeeksData = twoWeeksForecastData.reduce(
-        (result, object, i) => {
-            return (
-                result +
-                `<div id="array-element">
+    let aggregatedTwoWeeksData = data.weather.reduce((result, object, i) => {
+        return (
+            result +
+            `<div id="array-element">
                     <span>${i}</span>
                     <span>${object.date}</span>
                     <span>${object.avgtempC}</span>
@@ -63,94 +60,32 @@ const updateCard = (data, city) => {
                     <span>&deg;F</span>
                     <br>
                 </div>`
-            );
-        },
-        ""
-    );
+        );
+    }, "");
 
     twoWeeksForecast.innerHTML = aggregatedTwoWeeksData;
 };
 
-// citiesForm.addEventListener("submit", (evt) => {
-//     // prevent the default action
-//     evt.preventDefault();
+const submitForms = () => {
+    const cities = Array.from(citiesForm.getElementsByTagName("input"));
+    // get city value and trim any whitespace:
+    // const city = citiesForm[0].value.trim();
+    // const trimmedInput = city.value.trim();
 
-//     // remove "off" class to make the data visible:
-//     if (dataContainer.classList.contains("off")) {
-//         dataContainer.classList.remove("off");
-//     }
+    const results = cities.map(async ({ value }) => {
+        try {
+            getWeather(value).then((data) => {
+                await updateCard(data, value);
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    });
 
-//     // get city value and trim any whitespace:
-//     const city = citiesForm[0].value.trim();
-//     document.getElementsByClassName("change-location")[0].reset();
+    cities.forEach((city) => (city.value = null));
 
-//     // pass city to the getWeather(), then city and data to updateCard()
-//     getWeather(city)
-//         .then((data) => {
-//             updateCard(data, city);
-//         })
-//         .catch((err) => console.log(err));
-// });
-
-// 2nd location logic:
-addLocationButton.addEventListener("click", (evt) => {
-    evt.preventDefault();
-    if (optionalCity.classList.contains("hidden")) {
-        optionalCity.classList.remove("hidden");
+    // remove "off" class to make the data visible:
+    if (dataContainer.classList.contains("off")) {
+        dataContainer.classList.remove("off");
     }
-    // optionalCity.innerHTML = `<label for="city">enter another city</label>
-    //                 <input
-    //                     name="city"
-    //                     type="text"
-    //                     type="submit"
-    //                     id="city"
-    //                 /><br />`;
-});
-
-// if (!optionalCity.classList.contains("hidden")) {
-//     optionalCity.addEventListener("submit", (evt) => {
-//         evt.preventDefault();
-//         console.log("event fired!");
-//         // get 2n city value and trim any whitespace:
-//         const city2 = optionalCity.value.trim();
-//         document.getElementById("2nd-location").reset();
-//         console.log("city2: ", city2);
-
-//         getWeather(city2)
-//             .then((data2) => {
-//                 console.log("2nd set of data:", data2, city2);
-//                 updateCard(data2, city2);
-//             })
-//             .catch((err) => console.log(err));
-//     });
-// }
-
-// optionalCity.innerHTML = `<h5 class="city-name">${city2}</h5>
-//                     <div class="weather-condition">
-//                         <span>${data2.current_condition[0].weatherDesc[0].value}</span><br>
-//                         <span>CLOUD COVER: ${data.current_condition[0].cloudcover}%</span>
-
-//                     </div>
-//                     <div class="temperature">
-//                         <span>${data2.current_condition[0].temp_C}</span>
-//                         <span>&deg;C</span> / <span>${data2.current_condition[0].temp_F}</span>
-//                         <span>&deg;F</span>
-//                     </div>`;
-
-// const twoWeeksForecastData2 = data2.weather;
-// let aggregatedTwoWeeksData2 = twoWeeksForecastData2.reduce(
-//     (result, object, i) => {
-//         return (
-//             result +
-//             `<div id="array-element">
-//                     <span>${i}</span>
-//                     <span>${object.date}</span>
-//                     <span>${object.avgtempC}</span>
-//                     <span>&deg;C</span> / <span>${object.avgtempF}</span>
-//                     <span>&deg;F</span>
-//                     <br>
-//                 </div>`
-//         );
-//     },
-//     ""
-// );
+};
