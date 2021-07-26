@@ -16,6 +16,36 @@ addLocationButton.addEventListener("click", (evt) => {
     }
 });
 
+const submitForms = async () => {
+    const cities = Array.from(citiesForm.getElementsByTagName("input"));
+    // get city value and trim any whitespace:
+    // const city = citiesForm[0].value.trim();
+    // const trimmedInput = city.value.trim();
+
+    let results = [];
+
+    try {
+        let requests = cities.forEach(
+            ({ value }) => getWeather(value).then((data) => results.push(data)),
+            results // save the data as object inside an array!! or a json... ??
+        );
+        console.log("results: ", results);
+        console.log("requests: ", requests);
+        // const results = await Promise.all(requests);
+        // updateCard(results, value);
+    } catch (err) {
+        console.log(err);
+    } finally {
+        // set input fields to null
+        cities.forEach((city) => (city.value = null));
+    }
+
+    // remove "off" class to make the data visible:
+    if (dataContainer.classList.contains("off")) {
+        dataContainer.classList.remove("off");
+    }
+};
+
 const updateCard = (data, city) => {
     console.log("data and city in updateCard fn: ", data, city);
     // let locationTime = data.time_zone[0].localtime;
@@ -64,33 +94,6 @@ const updateCard = (data, city) => {
     }, "");
 
     twoWeeksForecast.innerHTML = aggregatedTwoWeeksData;
-};
-
-const submitForms = async () => {
-    const cities = Array.from(citiesForm.getElementsByTagName("input"));
-    // get city value and trim any whitespace:
-    // const city = citiesForm[0].value.trim();
-    // const trimmedInput = city.value.trim();
-
-    const requests = cities.map(({ value }) => getWeather(value));
-    try {
-        const results = await Promise.all(requests);
-        console.log("result: ", results);
-        // .then((data) => {
-        //     updateCard(data, value);
-        // });
-        // await
-    } catch (err) {
-        console.log(err);
-    }
-
-    // set input fields to null
-    cities.forEach((city) => (city.value = null));
-
-    // remove "off" class to make the data visible:
-    if (dataContainer.classList.contains("off")) {
-        dataContainer.classList.remove("off");
-    }
 };
 
 // const results = cities.map(async ({ value }) => {
