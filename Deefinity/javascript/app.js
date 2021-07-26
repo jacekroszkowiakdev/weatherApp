@@ -22,16 +22,19 @@ const submitForms = async () => {
     // const city = citiesForm[0].value.trim();
     // const trimmedInput = city.value.trim();
 
-    let results = [];
+    const requests = cities.map(({ value }) => getWeather(value));
+
+    // const response = cities.map(({ value }) => {
+    //     getWeather(value);
+    // });
+    // console.log("response: ", response);
 
     try {
-        let requests = cities.forEach(
-            ({ value }) => getWeather(value).then((data) => results.push(data)),
-            results // save the data as object inside an array!! or a json... ??
-        );
-        console.log("results: ", results);
-        console.log("requests: ", requests);
-        // const results = await Promise.all(requests);
+        const results = await Promise.all(requests);
+        console.log("results arr: ", results);
+        current.innerHTML = "";
+        results.forEach((element) => updateCard(element));
+
         // updateCard(results, value);
     } catch (err) {
         console.log(err);
@@ -46,7 +49,7 @@ const submitForms = async () => {
     }
 };
 
-const updateCard = (data, city) => {
+const updateCard = (data) => {
     console.log("data and city in updateCard fn: ", data, city);
     // let locationTime = data.time_zone[0].localtime;
     // let timeFormatAdjusted = locationTime.slice(11);
@@ -58,7 +61,22 @@ const updateCard = (data, city) => {
 
     // update the weather card with current weather condition :
     // make a async function that populates the data with 1 currentHTML, 2 weather icon and 3 two weeks array
-    current.innerHTML = `
+
+    let aggregatedTwoWeeksData = data.weather.reduce((result, object, i) => {
+        return (
+            result +
+            `<div class="array-element">
+                <span>${i}</span>
+                <span>${object.date}</span>
+                <span>${object.avgtempC}</span>
+                <span>&deg;C</span> / <span>${object.avgtempF}</span>
+                <span>&deg;F</span>
+                <br>
+                </div>`
+        );
+    }, "");
+
+    current.innerHTML += `
     <h5 class="city-name">${city}</h5>
                     <div class="weather-condition">
                         <span>${data.current_condition[0].weatherDesc[0].value}</span><br>
@@ -70,6 +88,7 @@ const updateCard = (data, city) => {
                         <span>&deg;C</span> / <span>${data.current_condition[0].temp_F}</span>
                         <span>&deg;F</span>
                     </div>
+                    ${aggregatedTwoWeeksData}
                     `;
 
     // update the icon with api provided image
@@ -79,30 +98,4 @@ const updateCard = (data, city) => {
     );
 
     //render the 14 days array into the html:
-    let aggregatedTwoWeeksData = data.weather.reduce((result, object, i) => {
-        return (
-            result +
-            `<div id="array-element">
-                    <span>${i}</span>
-                    <span>${object.date}</span>
-                    <span>${object.avgtempC}</span>
-                    <span>&deg;C</span> / <span>${object.avgtempF}</span>
-                    <span>&deg;F</span>
-                    <br>
-                </div>`
-        );
-    }, "");
-
-    twoWeeksForecast.innerHTML = aggregatedTwoWeeksData;
 };
-
-// const results = cities.map(async ({ value }) => {
-//     try {
-//         getWeather(value).then((data) => {
-//             console.log("try block data and value: ", data, value),
-//                 updateCard(data, value);
-//         });
-//     } catch (err) {
-//         console.log(err);
-//     }
-// });
