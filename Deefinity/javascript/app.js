@@ -23,19 +23,11 @@ const submitForms = async () => {
     // const trimmedInput = city.value.trim();
 
     const requests = cities.map(({ value }) => getWeather(value));
-
-    // const response = cities.map(({ value }) => {
-    //     getWeather(value);
-    // });
-    // console.log("response: ", response);
-
     try {
         const results = await Promise.all(requests);
         console.log("results arr: ", results);
         current.innerHTML = "";
         results.forEach((element) => updateCard(element));
-
-        // updateCard(results, value);
     } catch (err) {
         console.log(err);
     } finally {
@@ -49,19 +41,18 @@ const submitForms = async () => {
     }
 };
 
-const updateCard = (data) => {
-    console.log("data and city in updateCard fn: ", data, city);
-    // let locationTime = data.time_zone[0].localtime;
-    // let timeFormatAdjusted = locationTime.slice(11);
+const updateCard = async (data) => {
+    let locationTime = data.time_zone[0].localtime;
+    let localTimeFormatted = locationTime.slice(11);
 
-    // change image source in accordance to time of the day:
-    if (data.current_condition[0].isdaytime == "yes") {
-        dayTime.setAttribute("src", "icons/day.png");
-    } else dayTime.setAttribute("src", "icons/night.png");
+    // change source of image representing time of day accordingly:
+    let timeOfDay = "";
 
-    // update the weather card with current weather condition :
-    // make a async function that populates the data with 1 currentHTML, 2 weather icon and 3 two weeks array
+    data.current_condition[0].isdaytime == true
+        ? (timeOfDay = "./icons/day.png")
+        : (timeOfDay = "./icons/night.png");
 
+    //render the 14 days array into the html:
     let aggregatedTwoWeeksData = data.weather.reduce((result, object, i) => {
         return (
             result +
@@ -76,13 +67,29 @@ const updateCard = (data) => {
         );
     }, "");
 
+    // inject HTML with data:
     current.innerHTML += `
-    <h5 class="city-name">${city}</h5>
+    <div id="day-night">
+                    <img
+                        src=${timeOfDay}
+                        id="time-card"
+                        alt="image representing the time of day"
+                    />
+                </div>
+    <h5 class="city-name">${data.request[0].query}</h5>
                     <div class="weather-condition">
+                        <span>Local Time: ${localTimeFormatted}</span><br>
                         <span>${data.current_condition[0].weatherDesc[0].value}</span><br>
                         <span>CLOUD COVER: ${data.current_condition[0].cloudcover}%</span>
-
                     </div>
+                    <div id="weather-icon-container">
+                    <!-- api icon provided icon  -->
+                    <img
+                        src="${data.current_condition[0].weatherIconUrl[0].value}"
+                        id="weather-icon"
+                        alt="weather icon"
+                    />
+                </div>
                     <div class="temperature">
                         <span>${data.current_condition[0].temp_C}</span>
                         <span>&deg;C</span> / <span>${data.current_condition[0].temp_F}</span>
@@ -90,12 +97,4 @@ const updateCard = (data) => {
                     </div>
                     ${aggregatedTwoWeeksData}
                     `;
-
-    // update the icon with api provided image
-    icon.setAttribute(
-        "src",
-        `${data.current_condition[0].weatherIconUrl[0].value}`
-    );
-
-    //render the 14 days array into the html:
 };
