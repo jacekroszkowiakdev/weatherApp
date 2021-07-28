@@ -10,13 +10,24 @@ body {
 }
 
 .container {
+    display: grid;
+    grid-template-columns: auto;
     max-width: 460px;
     margin: 0 auto;
-    padding: 30px;
+    padding: 80px;
 }
 
-.day-night,
-.weather-details {
+.title-text {
+    grid-column: start;
+}
+
+#get-weather {
+    margin: 15px;
+}
+
+#day-night {
+    border: 1px solid black;
+    overflow: hidden;
     box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1), 0 0 0 2px rgb(255, 255, 255),
         0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
 }

@@ -1,18 +1,16 @@
 const citiesForm = document.getElementsByClassName("change-location")[0];
-const optionalCity = document.getElementById("2nd-location");
+const optionalLocation = document.getElementById("2nd-location");
 const getWeatherButton = document.getElementById("get-weather");
 const addLocationButton = document.getElementById("add-location");
-const current = document.getElementById("current-weather-details");
 const dataContainer = document.getElementById("data-container");
 const twoWeeksForecast = document.getElementById("two-weeks-forecast");
 const dayTime = document.getElementById("time-card");
-const icon = document.getElementById("weather-icon");
 
 // 2nd location optional button:
 addLocationButton.addEventListener("click", (evt) => {
     evt.preventDefault();
-    if (optionalCity.classList.contains("hidden")) {
-        optionalCity.classList.remove("hidden");
+    if (optionalLocation.classList.contains("hidden")) {
+        optionalLocation.classList.remove("hidden");
     }
 });
 
@@ -25,8 +23,7 @@ const submitForms = async () => {
     const requests = cities.map(({ value }) => getWeather(value));
     try {
         const results = await Promise.all(requests);
-        console.log("results arr: ", results);
-        current.innerHTML = "";
+        dataContainer.innerHTML = "";
         results.forEach((element) => updateCard(element));
     } catch (err) {
         console.log(err);
@@ -68,7 +65,7 @@ const updateCard = async (data) => {
     }, "");
 
     // inject HTML with data:
-    current.innerHTML += `
+    dataContainer.innerHTML += `
     <div id="day-night">
                     <img
                         src=${timeOfDay}
