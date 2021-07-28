@@ -11,18 +11,38 @@ body {
 
 .container {
     display: grid;
-    grid-template-columns: auto;
+    grid-template-rows: 1fr 1fr;
     max-width: 460px;
     margin: 0 auto;
-    padding: 80px;
+    padding: 20px;
+    background-color: pink;
 }
 
 .title-text {
-    grid-column: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: red;
+}
+
+.change-location {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    background-color: blue;
+}
+
+.input-fields {
+    display: flex;
+}
+
+#add-location {
+    border: 2 px black;
+    border-radius: 50px;
 }
 
 #get-weather {
     margin: 15px;
+    background-color: yellow;
 }
 
 #day-night {

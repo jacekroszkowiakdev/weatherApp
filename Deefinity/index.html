@@ -11,27 +11,31 @@
     <body>
         <div class="container">
             <h1 class="title-text">WEATHER TO YOUR E-MAIL</h1>
-            <form name="change-location" class="change-location">
-                <div class="1st-location">
-                    <label for="city">enter a city</label>
-                    <input name="city" type="text" id="city" />
-                </div>
+            <div class="change-location">
+                <div class="input-fields">
+                    <form name="change-location">
+                        <div class="1st-location">
+                            <label for="city">enter a city</label>
+                            <input name="city" type="text" id="city" />
+                            <button id="add-location">+</button>
+                        </div>
 
-                <button id="add-location">add 2nd location</button>
-                <!-- 2nd location hidden input field -->
-                <div id="2nd-location" class="hidden">
-                    <label for="city">enter another city</label>
-                    <input name="city2" type="text" id="city" /><br />
+                        <!-- 2nd location hidden input field -->
+                        <div id="2nd-location" class="hidden">
+                            <label for="city">enter another city</label>
+                            <input name="city2" type="text" id="city" /><br />
+                        </div>
+                    </form>
                 </div>
-            </form>
-            <button
-                type="button"
-                value="get weather!"
-                id="get-weather"
-                onclick="submitForms()"
-            >
-                get weather
-            </button>
+                <button
+                    type="button"
+                    value="get weather!"
+                    id="get-weather"
+                    onclick="submitForms()"
+                >
+                    get weather
+                </button>
+            </div>
             <div id="data-container" class="off">
                 <!-- weather api data injected here -->
             </div>

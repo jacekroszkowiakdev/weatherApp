@@ -38,16 +38,19 @@ const submitForms = async () => {
     }
 };
 
-const updateCard = async (data) => {
+const updateCard = (data) => {
     let locationTime = data.time_zone[0].localtime;
     let localTimeFormatted = locationTime.slice(11);
 
     // change source of image representing time of day accordingly:
     let timeOfDay = "";
 
-    data.current_condition[0].isdaytime == true
+    data.current_condition[0].isdaytime === "yes"
         ? (timeOfDay = "./icons/day.png")
         : (timeOfDay = "./icons/night.png");
+
+    console.log("time of day: ", data.current_condition[0].isdaytime);
+    console.log("timeOfDay :", timeOfDay);
 
     //render the 14 days array into the html:
     let aggregatedTwoWeeksData = data.weather.reduce((result, object, i) => {
