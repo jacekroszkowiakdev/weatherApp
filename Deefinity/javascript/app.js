@@ -57,7 +57,6 @@ const updateCard = (data) => {
         return (
             result +
             `<div class="array-element">
-                <span>${i}</span>
                 <span>${object.date}</span>
                 <span>${object.avgtempC}</span>
                 <span>&deg;C</span> / <span>${object.avgtempF}</span>
@@ -68,33 +67,33 @@ const updateCard = (data) => {
     }, "");
 
     // inject HTML with data:
-    dataContainer.innerHTML += `
-    <div id="day-night">
-                    <img
-                        src=${timeOfDay}
-                        id="time-card"
-                        alt="image representing the time of day"
-                    />
-                </div>
-    <h5 class="city-name">${data.request[0].query}</h5>
-                    <div class="weather-condition">
-                        <span>Local Time: ${localTimeFormatted}</span><br>
-                        <span>${data.current_condition[0].weatherDesc[0].value}</span><br>
-                        <span>CLOUD COVER: ${data.current_condition[0].cloudcover}%</span>
+    dataContainer.innerHTML += `<div id="api-data">
+        <div id="day-night">
+                        <img
+                            src=${timeOfDay}
+                            id="time-card"
+                            alt="image representing the time of day"
+                        />
+        </div>
+        <h5 class="city-name">${data.request[0].query}</h5>
+                        <div class="temperature">
+                            <span>${data.current_condition[0].temp_C}</span>
+                            <span>&deg;C</span> / <span>${data.current_condition[0].temp_F}</span>
+                            <span>&deg;F</span>
+                        </div>
+                        <div class="weather-condition">
+                            <span>Local Time: ${localTimeFormatted}</span><br>
+                            <span>${data.current_condition[0].weatherDesc[0].value}</span><br>
+                            <span>Cloud Cover is: ${data.current_condition[0].cloudcover}%</span>
+                        </div>
+                        <div id="weather-icon-container">
+                        <img
+                            src="${data.current_condition[0].weatherIconUrl[0].value}"
+                            id="weather-icon"
+                            alt="weather icon"
+                        />
                     </div>
-                    <div id="weather-icon-container">
-                    <!-- api icon provided icon  -->
-                    <img
-                        src="${data.current_condition[0].weatherIconUrl[0].value}"
-                        id="weather-icon"
-                        alt="weather icon"
-                    />
-                </div>
-                    <div class="temperature">
-                        <span>${data.current_condition[0].temp_C}</span>
-                        <span>&deg;C</span> / <span>${data.current_condition[0].temp_F}</span>
-                        <span>&deg;F</span>
-                    </div>
-                    ${aggregatedTwoWeeksData}
-                    `;
+                        ${aggregatedTwoWeeksData}
+        </div>
+    </div>`;
 };
